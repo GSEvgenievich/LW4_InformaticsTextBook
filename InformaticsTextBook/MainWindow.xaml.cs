@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using InformaticsTextBook.Pages;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,6 +20,8 @@ namespace InformaticsTextBook
         public MainWindow()
         {
             InitializeComponent();
+            App.CurrentFrame = MainFrame;
+            MainFrame.Navigate(new AuthorizationPage());
         }
     }
 }
