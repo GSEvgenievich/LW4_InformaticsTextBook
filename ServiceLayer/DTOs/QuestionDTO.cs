@@ -28,6 +28,17 @@ namespace ServiceLayer.DTOs
             }
         }
 
+        private bool _isTestFinished;
+        public bool IsTestFinished
+        {
+            get => _isTestFinished;
+            set
+            {
+                _isTestFinished = value;
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public void OnPropertyChanged([CallerMemberName] string? propName = null)
