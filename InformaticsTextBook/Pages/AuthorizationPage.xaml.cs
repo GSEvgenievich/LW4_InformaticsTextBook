@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ServiceLayer;
+using ServiceLayer.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +22,7 @@ namespace InformaticsTextBook.Pages
     /// </summary>
     public partial class AuthorizationPage : Page
     {
+        public static readonly UserService _userService = new();
 
         public AuthorizationPage()
         {
@@ -28,7 +31,17 @@ namespace InformaticsTextBook.Pages
 
         private async void AuthorizeButton_Click(object sender, RoutedEventArgs e)//при нажатии на кнопку идет заполнение данных текущего пользователя, если такой зарегестрирован
         {
-
+            var user = await _userService.GetUserByLoginAndPasswordAsync(authorizationLoginTextBox.Text, authorizationPasswordTextBox.Password);
+            if (user != null)
+            {
+                CurrentUser.UserID = user.UserId;
+                CurrentUser.Role = user.Role;
+                CurrentUser.UserLogin = user.UserLogin;
+                CurrentUser.UserPassword = user.UserPassword;
+                App.CurrentFrame.Navigate(new LectionsNavigatorPage());
+            }
+            else
+                IncorrectDataLabel.Visibility = Visibility.Visible;
         }
 
         private void AuthorizationPasswordTextBox_PasswordChanged(object sender, RoutedEventArgs e)
