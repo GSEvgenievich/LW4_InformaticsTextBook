@@ -120,7 +120,7 @@ namespace InformaticsTextBook.Pages
         private void LecturesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListBox listBox = sender as ListBox;
-            App.CurrentFrame.Navigate(new LectionPage());
+            App.CurrentFrame.Navigate(new LectionPage(listBox.SelectedItem as Lection));
         }
 
         private void ToProfileButton_Click(object sender, System.Windows.RoutedEventArgs e)

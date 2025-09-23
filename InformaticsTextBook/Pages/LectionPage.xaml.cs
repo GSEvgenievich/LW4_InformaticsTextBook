@@ -1,4 +1,6 @@
-﻿using ServiceLayer.Models;
+using ServiceLayer.Models;
+using ServiceLayer.Services;
+using ServiceLayer;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -16,8 +18,23 @@ namespace InformaticsTextBook.Pages
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        public static readonly VisitService _visitService = new();
         private Stopwatch _stopwatch;
         private DispatcherTimer _timer;
+        private Visit _currentVisit;
+        public Lection _selectedLection { get; set; }
+        public Lection SelectedLection
+        {
+            get => _selectedLection;
+            set
+            {
+                if (_selectedLection != value)
+                {
+                    _selectedLection = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         private string _elapsedTimeText = "0 сек";
         public string ElapsedTimeText
         {
@@ -62,17 +79,58 @@ namespace InformaticsTextBook.Pages
         {
             InitializeComponent();
             DataContext = this;
+            SelectedLection = selectedLection;
+            UserLoginText = $"Пользователь: {CurrentUser.UserLogin}";
+            SetImage(selectedLection.LectionId.ToString());
+            Loaded += LectionPage_Loaded;
+            Unloaded += LectionPage_Unloaded;
         }
         private async void LectionPage_Loaded(object sender, RoutedEventArgs e)
         {
+            // создаём визит
+            _currentVisit = await _visitService.CreateOrGetVisitAsync(CurrentUser.UserID, SelectedLection.LectionId);
+            TimeSpan lectionTime = TimeSpan.FromSeconds(Convert.ToDouble(_currentVisit.VisitTime));
+            ElapsedTimeText = lectionTime.TotalMinutes >= 1
+                   ? $"{lectionTime.Minutes} мин {lectionTime.Seconds} сек"
+                   : $"{lectionTime.Seconds} сек";
+
+            // запускаем таймер
+            _stopwatch = Stopwatch.StartNew();
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            _timer.Tick += (s, args) =>
+            {
+                var elapsed = _stopwatch.Elapsed + TimeSpan.FromSeconds(Convert.ToDouble(_currentVisit.VisitTime));
+                ElapsedTimeText = elapsed.TotalMinutes >= 1
+                    ? $"{elapsed.Minutes} мин {elapsed.Seconds} сек"
+                    : $"{elapsed.Seconds} сек";
+            };
+            _timer.Start();
         }
 
         private async void LectionPage_Unloaded(object sender, RoutedEventArgs e)
         {
+            if (_stopwatch != null)
+            {
+                _stopwatch.Stop();
+                _timer?.Stop();
+
+                // сохраняем в БД время (в секундах)
+                int seconds = (int)_stopwatch.Elapsed.TotalSeconds;
+                await _visitService.UpdateVisitTimeAsync(CurrentUser.UserID, SelectedLection.LectionId, seconds);
+            }
         }
 
         public void SetImage(string imageName)
         {
+            try
+            {
+                CurrentImage = new BitmapImage(new Uri($"pack://application:,,,/Images/{imageName}.png"));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ресурс не найден");
+                LectionImage.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
