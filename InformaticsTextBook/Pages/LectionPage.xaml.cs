@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using ServiceLayer.Models;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -57,7 +58,7 @@ namespace InformaticsTextBook.Pages
         protected void OnPropertyChanged([CallerMemberName] string propName = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
 
-        public LectionPage()
+        public LectionPage(Lection selectedLection)
         {
             InitializeComponent();
             DataContext = this;
