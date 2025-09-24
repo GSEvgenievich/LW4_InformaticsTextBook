@@ -167,7 +167,7 @@ namespace InformaticsTextBook.Pages
 
         private void ToResultButton_Click(object sender, RoutedEventArgs e)
         {
-            App.CurrentFrame.Navigate(new TestResultPage());
+            App.CurrentFrame.Navigate(new TestResultPage(Test));
         }
 
         private void StartTestButton_Click(object sender, RoutedEventArgs e)
