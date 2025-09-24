@@ -4,6 +4,55 @@
              xmlns:local="clr-namespace:InformaticsTextBook"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="Comic Sans MS"/>
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="Foreground" Value="#556B2F"/>
+            <!-- Оливковый текст -->
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Comic Sans MS"/>
+            <Setter Property="Background" Value="#CD853F"/>
+            <!-- Терракотовый фон -->
+            <Setter Property="BorderBrush" Value="#556B2F"/>
+            <!-- Оливковый бордер -->
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#FFFDD0"/>
+            <!-- Кремовый текст -->
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Comic Sans MS"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="BorderBrush" Value="#556B2F"/>
+            <!-- Оливковый бордер -->
+            <Setter Property="Background" Value="#FFFDD0"/>
+            <!-- Кремовый фон -->
+        </Style>
+        <Style TargetType="PasswordBox">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="BorderBrush" Value="#556B2F"/>
+            <!-- Оливковый бордер -->
+            <Setter Property="Background" Value="#FFFDD0"/>
+            <!-- Кремовый фон -->
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Comic Sans MS"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="#556B2F"/>
+            <!-- Оливковый текст -->
+        </Style>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="FontFamily" Value="Comic Sans MS"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#CD853F"/>
+            <!-- Терракотовый фон -->
+            <Setter Property="BorderBrush" Value="#556B2F"/>
+            <!-- Оливковый бордер -->
+            <Setter Property="Foreground" Value="#FFFDD0"/>
+            <!-- Кремовый текст -->
+        </Style>
     </Application.Resources>
 </Application>
