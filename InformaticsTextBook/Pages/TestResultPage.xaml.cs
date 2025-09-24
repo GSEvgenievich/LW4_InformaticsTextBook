@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ServiceLayer.Models;
+using ServiceLayer.Services;
+using ServiceLayer;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ServiceLayer.Data;
 
 namespace InformaticsTextBook.Pages
 {
@@ -24,6 +28,7 @@ namespace InformaticsTextBook.Pages
     public partial class TestResultPage : Page, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
+        public static readonly TestService _testService = new();
 
         private string _userLoginText;
         public string UserLoginText
@@ -67,19 +72,40 @@ namespace InformaticsTextBook.Pages
             set { _grade = value; OnPropertyChanged(); }
         }
 
-        public TestResultPage()
+        public Test Test { get; set; }
+        public TestResultPage(Test test)
         {
             InitializeComponent();
             DataContext = this;
+            Test = test;
+            UserLoginText = $"Пользователь: {CurrentUser.UserLogin}";
             LoadTestResults();
         }
 
         private async void LoadTestResults()
         {
+            // Название теста
+            TestName = $"Тест по лекции {Test.Lection.LectionName}";
+
+            using (var context = new InformaticTextBookContext())
+            {
+                List<Question> questionsWithResults = await _testService.GetQuestionsWithResults(Test.TestId, CurrentUser.UserID);
+
+                TotalQuestions = questionsWithResults.Count / 2;
+                CorrectAnswers = questionsWithResults.Sum(q => q.QuestionsResults.Any(qr => qr.IsRightAnswer) ? 1 : 0);
+
+                Percentage = TotalQuestions == 0 ? 0 : Math.Round((double)CorrectAnswers / TotalQuestions * 100, 2);
+
+                if (Percentage >= 90) Grade = "Отлично";
+                else if (Percentage >= 75) Grade = "Хорошо";
+                else if (Percentage >= 60) Grade = "Удовлетворительно";
+                else Grade = "Неудовлетворительно";
+            }
         }
 
         private void ToTestButton_Click(object sender, RoutedEventArgs e)
         {
+            App.CurrentFrame.Navigate(new TestPage(Test.Lection));
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propName = null)
