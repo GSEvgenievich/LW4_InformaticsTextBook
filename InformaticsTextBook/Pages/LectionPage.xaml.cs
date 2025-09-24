@@ -140,7 +140,7 @@ namespace InformaticsTextBook.Pages
 
         private void ToTestButton_Click(object sender, RoutedEventArgs e)
         {
-            App.CurrentFrame.Navigate(new TestPage());
+            App.CurrentFrame.Navigate(new TestPage(SelectedLection));
         }
 
         private void ToProfileButton_Click(object sender, RoutedEventArgs e)
