@@ -1,7 +1,7 @@
-﻿using ServiceLayer.DTOs;
+﻿using ServiceLayer;
+using ServiceLayer.DTOs;
 using ServiceLayer.Models;
 using ServiceLayer.Services;
-using ServiceLayer;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;

@@ -28,14 +28,25 @@
         </Grid>
 
         <ListBox x:Name="StudentsListBox" Margin="15" Background="#F5DEB3"
-                 ItemsSource="{Binding Students}" MouseDoubleClick="Student_DoubleClick">
+                 ItemsSource="{Binding Students}" MouseDoubleClick="Student_DoubleClick" HorizontalContentAlignment="Stretch">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border Padding="10" Margin="2" Background="#FFFDD0" CornerRadius="5">
-                        <StackPanel>
-                            <TextBlock Text="{Binding UserLogin}" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Role.RoleName}" FontStyle="Italic"/>
-                        </StackPanel>
+                    <Border Padding="15,10" Margin="2" Background="#FFFDD0" CornerRadius="5" HorizontalAlignment="Stretch">
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="👤" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,15,0">
+                                <TextBlock Text="{Binding Role.RoleName}" FontStyle="Italic" FontSize="16" Foreground="#556B2F" Margin="0,0,15,0"/>
+                                <TextBlock Text="{Binding UserLogin}" FontWeight="Bold" FontSize="20"/>
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="2" Text="➔" Foreground="#CD853F" FontSize="20" VerticalAlignment="Center"/>
+                        </Grid>
                     </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>

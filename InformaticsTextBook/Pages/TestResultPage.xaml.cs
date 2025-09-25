@@ -1,4 +1,5 @@
-﻿using ServiceLayer.Data;
+﻿using ServiceLayer;
+using ServiceLayer.Data;
 using ServiceLayer.Models;
 using ServiceLayer.Services;
 using System.ComponentModel;
@@ -28,6 +29,13 @@ namespace InformaticsTextBook.Pages
         {
             get => _testName;
             set { _testName = value; OnPropertyChanged(); }
+        }
+
+        private string _toProfileButtonText;
+        public string ToProfileButtonText
+        {
+            get => _toProfileButtonText;
+            set { _toProfileButtonText = value; OnPropertyChanged(); }
         }
 
         private int _totalQuestions;
@@ -73,7 +81,7 @@ namespace InformaticsTextBook.Pages
 
         private async void LoadTestResults()
         {
-            // Название теста
+            ToProfileButtonText = CurrentUser.UserID == User.UserId ? "Мой личный кабинет" : "Кабинет студента";
             TestName = $"Тест по лекции {Test.Lection.LectionName}";
 
             using (var context = new InformaticTextBookContext())
