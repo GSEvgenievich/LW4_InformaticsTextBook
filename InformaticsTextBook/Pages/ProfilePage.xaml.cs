@@ -1,6 +1,7 @@
-﻿using ServiceLayer.DTOs;
+﻿using ServiceLayer;
+using ServiceLayer.DTOs;
+using ServiceLayer.Models;
 using ServiceLayer.Services;
-using ServiceLayer;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,11 +11,15 @@ namespace InformaticsTextBook.Pages
     {
         public static readonly VisitService _visitService = new();
         public static readonly QuestionsResultsService _resultsService = new();
+        public static readonly UserService _userService = new();
         public static readonly TestService _testService = new();
+        private static int ProfileOwnerId { get; set; }
+        private static User ProfileOwner { get; set; }
 
-        public ProfilePage()
+        public ProfilePage(int profileOwnerId)
         {
             InitializeComponent();
+            ProfileOwnerId = profileOwnerId;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -24,9 +29,11 @@ namespace InformaticsTextBook.Pages
 
         private async void LoadData()
         {
-            var visits = await _visitService.GetUserVisits(CurrentUser.UserID);
+            ProfileOwner = await _userService.GetUserByIdAsync(ProfileOwnerId);
 
-            var testResults = await _resultsService.GetUserResults(CurrentUser.UserID);
+            var visits = await _visitService.GetUserVisits(ProfileOwner.UserId);
+
+            var testResults = await _resultsService.GetUserResults(ProfileOwner.UserId);
 
             // группировка лекций по темам
             var lectionsByTheme = visits
@@ -60,8 +67,11 @@ namespace InformaticsTextBook.Pages
 
             DataContext = new
             {
-                UserLogin = CurrentUser.UserLogin ?? "Unknown",
-                RoleName = CurrentUser.Role.RoleName ?? "User",
+                CurrentUserLogin = CurrentUser.UserLogin,
+                IsTeacherMode = CurrentUser.Role.RoleId == 1 ? Visibility.Visible : Visibility.Collapsed,
+                ProfileText = CurrentUser.UserID == ProfileOwner.UserId ? "Личный кабинет" : "Кабинет студента",
+                ProfileOwnerLogin = ProfileOwner.UserLogin ?? "Unknown",
+                RoleName = ProfileOwner.Role.RoleName ?? "User",
                 TotalLections = visits.Count,
                 TotalTime = totalTime,
                 LectionsByTheme = lectionsByTheme
@@ -81,9 +91,13 @@ namespace InformaticsTextBook.Pages
 
                 if (test != null)
                 {
-                    App.CurrentFrame.Navigate(new TestResultPage(test));
+                    App.CurrentFrame.Navigate(new TestResultPage(test, ProfileOwner));
                 }
             }
+        }
+        private void ToStudentsButton_Click(object sender, RoutedEventArgs e)
+        {
+            App.CurrentFrame.Navigate(new StudentsListPage());
         }
 
         private void ToNavigator_Click(object sender, RoutedEventArgs e)

@@ -123,9 +123,9 @@ namespace InformaticsTextBook.Pages
             App.CurrentFrame.Navigate(new LectionPage(listBox.SelectedItem as Lection));
         }
 
-        private void ToProfileButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void ToProfileButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            App.CurrentFrame.Navigate(new ProfilePage());
+            App.CurrentFrame.Navigate(new ProfilePage(CurrentUser.UserID));
         }
     }
 }
