@@ -18,6 +18,7 @@ namespace InformaticsTextBook.Pages
     public partial class TestPage : Page, INotifyPropertyChanged
     {
         public static readonly TestService _testService = new();
+        public static readonly UserService _userService = new();
         public static readonly QuestionsResultsService _resultsService = new();
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -165,9 +166,9 @@ namespace InformaticsTextBook.Pages
             await FinishTest();
         }
 
-        private void ToResultButton_Click(object sender, RoutedEventArgs e)
+        private async void ToResultButton_Click(object sender, RoutedEventArgs e)
         {
-            App.CurrentFrame.Navigate(new TestResultPage(Test));
+            App.CurrentFrame.Navigate(new TestResultPage(Test, await _userService.GetUserByIdAsync(CurrentUser.UserID)));
         }
 
         private void StartTestButton_Click(object sender, RoutedEventArgs e)
